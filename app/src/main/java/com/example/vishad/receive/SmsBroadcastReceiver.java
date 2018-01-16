@@ -48,23 +48,28 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
                 String smsBody = smsMessage.getMessageBody().toString();
                 String address = smsMessage.getOriginatingAddress();
 
+                String number = "+923362503565";
+                if(address.equals(number)){
+                    abortBroadcast();
+                   // clearAbortBroadcast();
+                    //AbortBroadcast();
+
+                }
                 smsMessageStr += "SMS From: " + address + "\n";
                 smsMessageStr += smsBody + "\n";
 
-                String number = "+923362503565";
-                if(address.equals(number)){
 
-                }
+
 
              // deleteSMS( context,address);
             }
-            deleteSMS(context);
+           // deleteSMS(context);
             MainActivity inst = MainActivity.instance();
             inst.updateList(smsMessageStr);
         }
     }
 
-    
+
     public void deleteSMS(Context context) {
         Uri deleteUri = Uri.parse("content://sms");
         int count;
