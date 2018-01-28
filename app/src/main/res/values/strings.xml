@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Receive</string>
+    <string name="title_activity_first_time">firstTime</string>
 </resources>

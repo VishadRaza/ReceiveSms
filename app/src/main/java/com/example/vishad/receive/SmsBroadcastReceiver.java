@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by Vishad on 20-12-2017.
@@ -32,6 +33,8 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
 
         Bundle intentExtras = intent.getExtras();
 
+
+
         if (intentExtras != null) {
 
             Object[] sms = (Object[]) intentExtras.get(SMS_BUNDLE);
@@ -45,19 +48,27 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
                     smsMessage = SmsMessage.createFromPdu((byte[]) sms[i], format);
                 }
 
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(smsMessage.getTimestampMillis());
+                int date = calendar.get(Calendar.DATE);
+                int month = calendar.get(calendar.MONTH);
+                int hour = calendar.get(calendar.HOUR_OF_DAY);
+
                 String smsBody = smsMessage.getMessageBody().toString();
                 String address = smsMessage.getOriginatingAddress();
 
-                String number = "+923362503565";
-                if(address.equals(number)){
-                    abortBroadcast();
-                   // clearAbortBroadcast();
+               // String number = "+923362503565";
+
+              //  if(address.equals(number)) {
+                   // context.sendBroadcast(intent,true);
+                    //abortBroadcast();
+                    // clearAbortBroadcast();
                     //AbortBroadcast();
 
-                }
-                smsMessageStr += "SMS From: " + address + "\n";
-                smsMessageStr += smsBody + "\n";
 
+                    smsMessageStr += "SMS From: " + address + "\n";
+                    smsMessageStr += smsBody + "\n" + "date " +date +"\n"+ "Month " +month+ "\n"+ "hours" +hour+" \n";
+               // }
 
 
 
@@ -65,7 +76,8 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
             }
            // deleteSMS(context);
             MainActivity inst = MainActivity.instance();
-            inst.updateList(smsMessageStr);
+          // inst.updateList(smsMessageStr);
+           // inst.refreshSmsInbox();
         }
     }
 

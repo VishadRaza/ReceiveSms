@@ -2,7 +2,9 @@ package com.example.vishad.receive;
 
 import android.Manifest;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -16,9 +18,18 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
+import android.provider.Telephony.*;
 
 public class MainActivity extends AppCompatActivity {
+
+    String number;
+
 
     public static MainActivity instance() {
         return inst;
@@ -35,14 +46,42 @@ public class MainActivity extends AppCompatActivity {
     ListView messages;
     ArrayAdapter arrayAdapter;
     private static MainActivity inst;
+    String s="";
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_main);
+   //    SharedPreferences preferences = getSharedPreferences("ShaPreferences",Context.MODE_PRIVATE);
+     //   SharedPreferences.Editor editor = preferences.edit();
+       // s = preferences.getString("MyNumber",null);
+        Log.v("savedNumber"," "+s);
+
+
+       /* if(savedInstanceState == null ){
+          Bundle extras = getIntent().getExtras();
+           if(extras == null){
+               number = null;
+
+            }
+            else {
+                number = extras.getString("Mynumber");
+            }
+
+        }
+        else {
+            number =(String) savedInstanceState.getSerializable("Mynumber");
+        }*/
+      number = getIntent().getStringExtra("MyNumber");
+
+        Log.v( "friday" ,"" +number);
+
         messages = (ListView) findViewById(R.id.list);
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1);
         messages.setAdapter(arrayAdapter);
+        //refreshSmsInbox();
 
         // SmsBroadcastReceiver smsBroadcastReceiver = new SmsBroadcastReceiver();
         //smsBroadcastReceiver.onReceive(getApplicationContext(),getIntent());
@@ -52,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             refreshSmsInbox();
         }
-        displaySmsLog();
+
     }
 
 
@@ -70,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Please Allow permission!", Toast.LENGTH_SHORT).show();
             }
             requestPermissions(new String[]{Manifest.permission.READ_SMS}, READ_SMS_PERMISSION_REQUEST);
-
         }
     }
 
@@ -87,33 +125,33 @@ public class MainActivity extends AppCompatActivity {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         }
-    }
-
-    public void refreshSmsInbox() {
+    }  public void refreshSmsInbox() {
         ContentResolver contentResolver = getContentResolver();
         Cursor smsInboxcursor = contentResolver.query(Uri.parse("content://sms/inbox"), null, null, null, null);
         int indexBody = smsInboxcursor.getColumnIndex("body");
         int indexAddress = smsInboxcursor.getColumnIndex("address");
-
-
-        String i = "+923362503565";
+        String i = number;
+        Log.v("hel" ,"msg" +i);
         //    String check = "00923362503565";
 
         if (indexBody < 0 || !smsInboxcursor.moveToFirst())
             return;
         arrayAdapter.clear();
-
         //  if(i.equals(indexAddress)) {
         do {
             String number = smsInboxcursor.getString(indexAddress);
             if (number.equals(i)) {
 
+               SimpleDateFormat df= new SimpleDateFormat("dd-MM-yyyy");
+            // df.format(smsInboxcursor.getString(date));
+
+               String FormattedDate = df.format(smsInboxcursor.getColumnIndex("4"));
                 String str = "SMS From: " + smsInboxcursor.getString(indexAddress) +
-                        "\n" + smsInboxcursor.getString(indexBody) + "\n";
+                        "\n" + smsInboxcursor.getString(indexBody) + "\n"+" date" +FormattedDate+ "\n" ;
+
+
                 arrayAdapter.add(str);
-
-
-
+displaySmsLog();
             }
 
         }
@@ -122,8 +160,6 @@ public class MainActivity extends AppCompatActivity {
 
         //   }
     }
-
-
     private void displaySmsLog() {
         Uri allMessages = Uri.parse("content://sms/");
         //Cursor cursor = managedQuery(allMessages, null, null, null, null); Both are same
@@ -136,7 +172,5 @@ public class MainActivity extends AppCompatActivity {
             }
             Log.d("One row finished",
                     "**************************************************");
-        }
-
-    }
+        }  }
 }
