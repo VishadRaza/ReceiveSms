@@ -142,12 +142,38 @@ public class MainActivity extends AppCompatActivity {
             String number = smsInboxcursor.getString(indexAddress);
             if (number.equals(i)) {
 
-               SimpleDateFormat df= new SimpleDateFormat("dd-MM-yyyy");
-            // df.format(smsInboxcursor.getString(date));
+            // SimpleDateFormat df= new SimpleDateFormat("dd-MM-yyyy");
+           // df.format(smsInboxcursor.getString(dateIndex));
 
-               String FormattedDate = df.format(smsInboxcursor.getColumnIndex("4"));
+              // String FormattedDate = df.format(smsInboxcursor.getColumnIndex("4"));
+              //  int dateIndex = smsInboxcursor.getColumnIndex("date");
+
+                //String formattedDate = df.format(smsInboxcursor.getString(dateIndex));
+                int dateIndex = smsInboxcursor.getColumnIndex("date");
+                Log.v("dateIndex",""+dateIndex);
+
+                String date =  smsInboxcursor.getString(smsInboxcursor.getColumnIndex("date"));
+                Long timestamp = Long.parseLong(date);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(timestamp);
+                Date finaldate = calendar.getTime();
+                String smsDate = finaldate.toString();
+                Log.v("dammm",""+smsDate);
+
+               // String formattedDate = df.format(smsInboxcursor.getString(dateIndex));
+                //DateFormat outputFormatter1 = new SimpleDateFormat("dd-MMM-yyyy");
+               // String output1 = outputFormatter1.format(outputFormatter1);
+
+                String pattern = "yyyy-MM-dd";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
+               // String date = simpleDateFormat.format(new Date());
+                //System.out.println(date);
+
+
+Log.v("formatted"," "+date);
                 String str = "SMS From: " + smsInboxcursor.getString(indexAddress) +
-                        "\n" + smsInboxcursor.getString(indexBody) + "\n"+" date" +FormattedDate+ "\n" ;
+                        "\n" + smsInboxcursor.getString(indexBody) + "\n" + "date: " +smsDate +"\n" ;
 
 
                 arrayAdapter.add(str);
