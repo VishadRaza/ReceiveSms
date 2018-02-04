@@ -21,18 +21,4 @@
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_main2"></include>
-    <ListView
-        android:id="@+id/list"
-        android:layout_marginTop="60dp"
-        android:layout_width="502dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="96dp">
-
-    </ListView>
-
-
-
 </android.support.design.widget.CoordinatorLayout>

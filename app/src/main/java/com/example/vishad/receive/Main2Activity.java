@@ -1,21 +1,16 @@
 package com.example.vishad.receive;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.ContentResolver;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -35,44 +30,18 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class Main2Activity extends AppCompatActivity
-
-
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    String number;
-    public static Main2Activity instance() {
-        return inst;
-    }
-
-    public void onStart() {
-        super.onStart();
-        inst = this;
-    }
     private static final int READ_SMS_PERMISSION_REQUEST = 1;
     ArrayList<String> smsMessageList = new ArrayList<>();
     ListView messages;
     ArrayAdapter arrayAdapter;
-    private static Main2Activity inst;
-    String s="";
-    SharedPreferences prefs;
 
-    @SuppressLint("ResourceType")
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-
-
-
-
-
-
-
-
-
-
-
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -82,59 +51,36 @@ public class Main2Activity extends AppCompatActivity
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-
-
-
-
             }
         });
-
-
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
+        drawer.setDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
-
-
-
-
-        prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        s=prefs.getString("number",null);
-
-        Log.v("savedNumber"," "+s);
-
-        number = getIntent().getStringExtra("MyNumber");
-
-        Log.v( "friday" ,"" +number);
-
         messages = (ListView) findViewById(R.id.list);
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1);
         messages.setAdapter(arrayAdapter);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            {
+                getPermissionToReadSMS();
+            }
+        }
+        else {
+            refreshSmsInbox();
+        }
+
         //refreshSmsInbox();
 
-        // SmsBroadcastReceiver smsBroadcastReceiver = new SmsBroadcastReceiver();
-        //smsBroadcastReceiver.onReceive(getApplicationContext(),getIntent());
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            getPermissionToReadSMS();
-        } else {
-            refreshSmsInbox();
-        }  }
-    public void updateList(final String newSms) {
-        //arrayAdapter.insert(newSms, 0);
-        arrayAdapter.add(newSms);
-        arrayAdapter.notifyDataSetChanged();
-        // arrayAdapter.add(newSms);
     }
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void getPermissionToReadSMS() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
@@ -144,6 +90,7 @@ public class Main2Activity extends AppCompatActivity
             requestPermissions(new String[]{Manifest.permission.READ_SMS}, READ_SMS_PERMISSION_REQUEST);
         }
     }
+
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         if (requestCode == READ_SMS_PERMISSION_REQUEST) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -156,12 +103,14 @@ public class Main2Activity extends AppCompatActivity
 
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-    }  public void refreshSmsInbox() {
+    }
+
+    public void refreshSmsInbox() {
         ContentResolver contentResolver = getContentResolver();
         Cursor smsInboxcursor = contentResolver.query(Uri.parse("content://sms/inbox"), null, null, null, null);
         int indexBody = smsInboxcursor.getColumnIndex("body");
         int indexAddress = smsInboxcursor.getColumnIndex("address");
-        String i = s;
+        String i = "+923362503565";
         Log.v("hel" ,"msg" +i);
         //    String check = "00923362503565";
 
@@ -198,32 +147,12 @@ public class Main2Activity extends AppCompatActivity
                         "\n" + smsInboxcursor.getString(indexBody) + "\n" + "date: " +da +"\n"+"Time: "+datte[3]+"\n" ;
 
                 arrayAdapter.add(str);
-                displaySmsLog();
+
             }   }
         while (smsInboxcursor.moveToNext());
         //   }
     }
-    private void displaySmsLog() {
-        Uri allMessages = Uri.parse("content://sms/");
-        //Cursor cursor = managedQuery(allMessages, null, null, null, null); Both are same
-        Cursor cursor = this.getContentResolver().query(allMessages, null,
-                null, null, null);
 
-        while (cursor.moveToNext()) {
-            for (int i = 0; i < cursor.getColumnCount(); i++) {
-                Log.d(cursor.getColumnName(i) + "", cursor.getString(i) + "");
-            }
-            Log.d("One row finished",
-                    "**************************************************");
-        }
-
-
-
-
-
-
-
-    }
 
     @Override
     public void onBackPressed() {
@@ -234,6 +163,8 @@ public class Main2Activity extends AppCompatActivity
             super.onBackPressed();
         }
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -252,15 +183,12 @@ public class Main2Activity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-
         }
 
         return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
-
-
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -269,8 +197,6 @@ public class Main2Activity extends AppCompatActivity
         if (id == R.id.nav_about) {
             // Handle the camera action
         } else if (id == R.id.nav_graph) {
-            Intent intent = new Intent(Main2Activity.this,Main3Activity.class);
-            startActivity(intent);
 
         } else if (id == R.id.nav_slideshow) {
 

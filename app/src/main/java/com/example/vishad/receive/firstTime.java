@@ -37,7 +37,7 @@ public class firstTime extends AppCompatActivity {
             edit.commit();
         }
         else {
-            Intent intent = new Intent(this, Main2Activity.class);
+            Intent intent = new Intent(this, MainActivity.class);
                 intent.putExtra("MyNumber",number);
                 startActivity(intent);
                 finish();
@@ -90,7 +90,7 @@ public class firstTime extends AppCompatActivity {
                 edit.commit();
 
                 Log.v("Save",""+number);
-                Intent i = new Intent(firstTime.this,Main2Activity.class);
+                Intent i = new Intent(firstTime.this,MainActivity.class);
                 String str = number;
                 i.putExtra("MyNumber",str);
                 startActivity(i);
