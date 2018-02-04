@@ -75,7 +75,7 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
              // deleteSMS( context,address);
             }
            // deleteSMS(context);
-            MainActivity inst = MainActivity.instance();
+            Main2Activity inst = Main2Activity.instance();
           // inst.updateList(smsMessageStr);
            // inst.refreshSmsInbox();
         }

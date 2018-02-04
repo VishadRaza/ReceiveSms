@@ -20,18 +20,31 @@ public class firstTime extends AppCompatActivity {
 
     EditText editText;
     Button button;
+    SharedPreferences prefs;
 
     String number;
-    SharedPreferences preferences;
-  SharedPreferences.Editor editor ;
+    //SharedPreferences preferences;
+  //SharedPreferences.Editor editor ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-      //  preferences= PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-      // preferences = getSharedPreferences("ShaPreferences", Context.MODE_PRIVATE);
+         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        boolean previouslyStarted = prefs.getBoolean("first",Boolean.TRUE);
+        if(previouslyStarted) {
+            SharedPreferences.Editor edit = prefs.edit();
+            edit.putBoolean("first", Boolean.FALSE);
+            edit.commit();
+        }
+        else {
+            Intent intent = new Intent(this, Main2Activity.class);
+                intent.putExtra("MyNumber",number);
+                startActivity(intent);
+                finish();
 
-       //SharedPreferences.Editor editor = preferences.edit();
+        }//  preferences= PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+      // preferences = getSharedPreferences("ShaPreferences", Context.MODE_PRIVATE);
+     //  sharedPreferences.Editor editor = preferences.edit();
       //editor = preferences.edit();
         //boolean firstTime = preferences.getBoolean("first", true);
         //if(firstTime) {
@@ -72,17 +85,12 @@ public class firstTime extends AppCompatActivity {
                 // TODO Auto-generated method stub
 
                 number = editText.getText().toString();
-
-               // preferences.edit().putString("savedNumber",number);
-               // preferences.edit().commit();
-               // preferences.edit().apply();
+                SharedPreferences.Editor edit = prefs.edit();
+                edit.putString("number",number);
+                edit.commit();
 
                 Log.v("Save",""+number);
-          //  Intent intent = new Intent(firstTime.this,MainActivity.class);
-            //intent.putExtra("Mynumber", number);
-            //startActivity(intent);
-
-                Intent i = new Intent(firstTime.this,MainActivity.class);
+                Intent i = new Intent(firstTime.this,Main2Activity.class);
                 String str = number;
                 i.putExtra("MyNumber",str);
                 startActivity(i);
