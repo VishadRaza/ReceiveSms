@@ -37,7 +37,7 @@ public class firstTime extends AppCompatActivity {
             edit.commit();
         }
         else {
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, Main2Activity.class);
                 intent.putExtra("MyNumber",number);
                 startActivity(intent);
                 finish();
@@ -79,7 +79,6 @@ public class firstTime extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // TODO Auto-generated method stub

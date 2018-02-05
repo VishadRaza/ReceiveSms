@@ -139,6 +139,9 @@ public class MainActivity extends AppCompatActivity {
 
                 String da = datte[2].concat(datte[1]);
 
+                String [] num = smsInboxcursor.getString(indexBody).split(":");
+                Log.v("split",""+num);
+
 Log.v("formatted"," "+date);
                 String str = "SMS From: " + smsInboxcursor.getString(indexAddress) +
                         "\n" + smsInboxcursor.getString(indexBody) + "\n" + "date: " +da +"\n"+"Time: "+datte[3]+"\n" ;

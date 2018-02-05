@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/background_light"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.vishad.receive.firstTime"
     tools:showIn="@layout/activity_first_time">
@@ -16,6 +17,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="122dp"
+        android:textColor="@android:color/holo_blue_dark"
         android:text="Enter number for which you want to receive sms"
         />
 
@@ -32,6 +34,7 @@
     <Button
         android:id="@+id/go"
         android:text="Continue"
+        android:background="@android:color/transparent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/number"
